@@ -5,7 +5,10 @@ import net.developertobi.game.api.bossbar.ArenaBossBar
 import net.developertobi.game.api.bossbar.BossBarColor
 import net.developertobi.game.api.bossbar.BossBarOverlay
 import net.developertobi.game.api.phase.Phase
+import net.developertobi.game.api.MicroGamesProvider
 import net.developertobi.game.api.phase.PhaseId
+import net.developertobi.game.api.sound.GameSound
+import net.kyori.adventure.audience.Audience
 import net.developertobi.game.bukkit.localization.LangKeys
 import net.developertobi.mclib.api.McLibProvider
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
@@ -48,6 +51,13 @@ class MapVotingPhase(
                 context.advanceToNextPhase()
                 return@Runnable
             }
+
+            val audience = Audience.audience(context.players)
+            MicroGamesProvider.api.soundService.play(
+                if (remaining == 1) GameSound.COUNTDOWN_FINAL else GameSound.COUNTDOWN_TICK,
+                audience,
+            )
+
             bossBar?.name(
                 McLibProvider.api.localizationController.line(
                     LangKeys.PHASE_MAP_VOTING,

@@ -17,6 +17,7 @@ import net.developertobi.game.api.arena.ArenaManager
 import net.developertobi.game.bukkit.api.MicroGamesApiImpl
 import net.developertobi.game.bukkit.api.arena.ArenaManagerImpl
 import net.developertobi.game.bukkit.api.phase.DefaultPhaseProvider
+import net.developertobi.game.bukkit.api.sound.SoundServiceImpl
 import net.developertobi.game.bukkit.api.stats.BufferedStatsService
 import net.developertobi.game.bukkit.api.stats.DelegatingStatsService
 import net.developertobi.game.bukkit.api.stats.StatsServiceImpl
@@ -62,15 +63,16 @@ class MicroGamesPlugin : JavaPlugin() {
 
         arenaManager = ArenaManagerImpl(this, DefaultPhaseProvider(this))
         arenaManager.createArena(ArenaId("default")).start()
-        MicroGamesProvider.setApi(MicroGamesApiImpl(
+        MicroGamesProvider.api = MicroGamesApiImpl(
             loadedGames = gameLoader.loadedGames,
             arenaManager = arenaManager,
             plugin = this,
             statsService = delegatingStatsService,
+            soundService = SoundServiceImpl(),
             coroutineScope = coroutineScope,
             minecraftDispatcher = minecraftDispatcher,
             databaseDispatcher = databaseDispatcher,
-        ))
+        )
     }
 
     private fun startReconnectTask(
@@ -104,13 +106,12 @@ class MicroGamesPlugin : JavaPlugin() {
 
     override fun onDisable() {
         val api = MicroGamesProvider.api
-        if (api?.statsService is DelegatingStatsService) {
+        if (api.statsService is DelegatingStatsService) {
             val delegate = (api.statsService as DelegatingStatsService).delegate
             if (delegate is BufferedStatsService && delegate.hasBufferedData()) {
                 logger.warning("Database was offline. Buffered stats will be lost.")
             }
         }
-        MicroGamesProvider.clearApi()
         reconnectJob?.cancel()
         reconnectJob = null
         coroutineScope.cancel()

@@ -6,7 +6,10 @@ import net.developertobi.game.api.bossbar.BossBarColor
 import net.developertobi.game.api.bossbar.BossBarOverlay
 import net.developertobi.game.api.game.getProperties
 import net.developertobi.game.api.phase.Phase
+import net.developertobi.game.api.MicroGamesProvider
 import net.developertobi.game.api.phase.PhaseId
+import net.developertobi.game.api.sound.GameSound
+import net.kyori.adventure.audience.Audience
 import net.developertobi.game.bukkit.localization.LangKeys
 import net.developertobi.mclib.api.McLibProvider
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
@@ -41,6 +44,11 @@ class EndingPhase(
         for (player in context.players) {
             bossBar!!.addPlayer(player)
         }
+
+        MicroGamesProvider.api.soundService.play(
+            GameSound.GAME_END,
+            Audience.audience(context.players),
+        )
 
         task = Bukkit.getScheduler().runTaskTimer(plugin, Runnable {
             if (remaining <= 0) {

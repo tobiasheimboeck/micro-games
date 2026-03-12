@@ -4,6 +4,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import net.developertobi.game.api.arena.ArenaManager
 import net.developertobi.game.api.game.MicroGame
+import net.developertobi.game.api.sound.SoundService
 import net.developertobi.game.api.stats.StatsService
 
 /**
@@ -21,6 +22,9 @@ interface MicroGamesApi {
 
     /** Stats service. */
     val statsService: StatsService
+
+    /** Sound service for consistent game sounds. */
+    val soundService: SoundService
 
     /** CoroutineScope for async work. Cancelled when plugin disables. */
     val coroutineScope: CoroutineScope

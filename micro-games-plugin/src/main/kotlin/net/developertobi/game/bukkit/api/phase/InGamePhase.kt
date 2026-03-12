@@ -1,5 +1,6 @@
 package net.developertobi.game.bukkit.api.phase
 
+import net.developertobi.game.api.MicroGamesProvider
 import net.developertobi.game.api.arena.ArenaContext
 import net.developertobi.game.api.bossbar.ArenaBossBar
 import net.developertobi.game.api.bossbar.BossBarColor
@@ -8,6 +9,8 @@ import net.developertobi.game.api.game.getProperties
 import net.developertobi.game.api.phase.Phase
 import net.developertobi.game.api.phase.PhaseId
 import net.developertobi.game.api.phase.SubPhase
+import net.developertobi.game.api.sound.GameSound
+import net.kyori.adventure.audience.Audience
 import net.developertobi.game.bukkit.localization.LangKeys
 import net.developertobi.mclib.api.McLibProvider
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
@@ -32,6 +35,11 @@ class InGamePhase : Phase {
         for (player in context.players) {
             bossBar!!.addPlayer(player)
         }
+
+        MicroGamesProvider.api.soundService.play(
+            GameSound.GAME_START,
+            Audience.audience(context.players),
+        )
     }
 
     override fun onStop(context: ArenaContext) {
