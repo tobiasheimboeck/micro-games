@@ -1,0 +1,90 @@
+---
+description: Kotlin style – properties, null safety, avoid lambdas for simple values, method spacing
+globs: **/*.kt
+alwaysApply: false
+---
+
+# Kotlin Style
+
+## Null Safety – Direct Safe Calls
+
+Prefer **direct safe calls** over redundant `let` when only invoking a single method:
+
+```kotlin
+// Preferred
+currentSubPhase?.onStop(context)
+
+// Avoid – redundant let
+currentSubPhase?.let { sub -> sub.onStop(context) }
+```
+
+Use `?.let { }` only when you need the non-null value for multiple operations or to assign to a variable.
+
+## Property Declaration
+
+Prefer **direct assignment** over getter syntax when declaring properties:
+
+```kotlin
+// Preferred
+override val arenaId: ArenaId = arena.id
+
+// Avoid
+override val arenaId: ArenaId
+    get() = arena.id
+```
+
+Use `get() = ...` only when the value **changes at runtime** and must be recomputed on each access (e.g. delegating to mutable state).
+
+## Parameters – Direct Values, No Lambdas
+
+Pass values directly instead of wrapping them in lambdas when the value is known at call site:
+
+```kotlin
+// Preferred
+class StatsServiceImpl(
+    private val plugin: JavaPlugin,
+    private val loadedGames: List<MicroGame>,
+)
+
+StatsServiceImpl(plugin, gameLoader.loadedGames)
+
+// Avoid – unnecessary lambda
+class StatsServiceImpl(
+    private val plugin: JavaPlugin,
+    private val loadedGames: () -> List<MicroGame>,
+)
+
+StatsServiceImpl(plugin) { gameLoader.loadedGames }
+```
+
+Use lambdas only when you need lazy evaluation or the value changes over time.
+
+## Method Bodies – Logical Spacing
+
+Add blank lines between logical blocks inside methods. Do not cram all statements together:
+
+```kotlin
+// Preferred
+override fun record(scope: StatScope.Player, key: StatKey, value: Number) {
+    val definition = getDefinition(key) ?: return
+    val file = getPlayerGameFile(scope.playerId, key.gameId)
+    val current = loadStats(file)
+
+    val currentVal = current[key.statId.value]?.toDouble() ?: definition.defaultValue.toDouble()
+    val newVal = when (definition.aggregation) { ... }
+
+    current[key.statId.value] = newVal
+    saveStats(file, current)
+}
+
+// Avoid – everything cramped
+override fun record(scope: StatScope.Player, key: StatKey, value: Number) {
+    val definition = getDefinition(key) ?: return
+    val file = getPlayerGameFile(scope.playerId, key.gameId)
+    val current = loadStats(file)
+    val currentVal = current[key.statId.value]?.toDouble() ?: definition.defaultValue.toDouble()
+    val newVal = when (definition.aggregation) { ... }
+    current[key.statId.value] = newVal
+    saveStats(file, current)
+}
+```

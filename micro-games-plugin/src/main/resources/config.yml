@@ -1,0 +1,11 @@
+# MicroGames - Configuration
+
+database:
+  host: localhost
+  port: 3306
+  database: microgames
+  username: microgames
+  password: ""
+  pool-size: 5
+  # Seconds between connection retries when DB is offline. 0 = disable.
+  reconnect-interval: 60

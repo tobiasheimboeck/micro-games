@@ -1,0 +1,30 @@
+---
+description: Micro Games project context – ClassLoader loading
+alwaysApply: true
+---
+
+# Micro Games – Project Context
+
+## Modules
+
+| Module | Purpose |
+|--------|---------|
+| **micro-games-api** | `MicroGame`, `@MicroGameProperties`, `MicroGamesApi`, `MicroGamesProvider` – contract for game JARs |
+| **micro-games-plugin** | Paper plugin (Core) – loads game JARs via ClassLoader |
+
+## API Access
+
+- **MicroGamesProvider.api** – Entry point for games and other code (McLib pattern)
+- Plugin sets `MicroGamesProvider.setApi(...)` on enable, `clearApi()` on disable
+
+## Loading
+
+- **GameLoader** scans `plugins/MicroGames/games/` for JAR files
+- Per JAR: `URLClassLoader` with parent = API classloader
+- Discovery via `ServiceLoader` (`META-INF/services/net.developertobi.game.api.game.MicroGame`)
+- `onLoad()` on enable, `onUnload()` on disable
+
+## Game JAR Contract
+
+1. Implement `MicroGame` with parameterless constructor
+2. Provide `META-INF/services/net.developertobi.game.api.game.MicroGame` with fully qualified class name

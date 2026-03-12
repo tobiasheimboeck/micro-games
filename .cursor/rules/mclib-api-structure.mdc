@@ -1,0 +1,45 @@
+---
+description: McLib API structure and McLibProvider.api access
+globs: **/*.kt
+alwaysApply: false
+---
+
+# McLib API Structure
+
+## McLibProvider.api – Entry Point
+
+McLib is accessed exclusively via `McLibProvider.api`:
+
+```kotlin
+import net.developertobi.mclib.api.McLibProvider
+
+// Access all McLib functionality
+McLibProvider.api.formatRegistry
+McLibProvider.api.formatController
+McLibProvider.api.localizationController
+McLibProvider.api.persistentDataController
+McLibProvider.api.sidebarController
+McLibProvider.api.teamController
+McLibProvider.api.commandController
+McLibProvider.api.yamlConfigController
+McLibProvider.api.jsonConfigController
+```
+
+## McLib Module Structure (Reference)
+
+- **mclib-api**: Interfaces, abstract types, contracts – no implementation
+- **mclib-plugin**: Implementations under `net.developertobi.mclib.bukkit.api.*`
+
+The API is set in `McLibProvider.api` by the plugin on startup.
+
+## Dependency
+
+Plugins that use McLib:
+
+```kotlin
+dependencies {
+    compileOnly("net.developertobi.mclib:mclib-api:1.0-SNAPSHOT")
+}
+```
+
+Repository: `https://maven.pkg.github.com/tobiasheimboeck/McLib`

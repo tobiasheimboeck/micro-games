@@ -1,0 +1,43 @@
+---
+description: Plugin API structure – API interfaces vs implementations
+globs: **/*.kt
+alwaysApply: false
+---
+
+# Plugin API Structure (McLib Pattern)
+
+## Module Split
+
+| Module | Contents |
+|--------|----------|
+| **`*-api`** | Interfaces, data classes, abstract types – no Bukkit/implementation details |
+| **`*-plugin`** | Concrete implementations, Bukkit integration, listeners |
+
+## Implementations in the Plugin Module
+
+**All implementations of API interfaces must live under the `api` package/folder.**
+
+```
+plugin-module/
+  src/.../bukkit/
+    api/                    ← All API implementations (required)
+      MicroGamesApiImpl.kt
+      arena/
+        ArenaContextImpl.kt
+        ArenaManagerImpl.kt
+      phase/
+        DefaultPhaseProvider.kt
+        InGamePhase.kt
+        ...
+    arena/                  ← Internal only (ArenaImpl, ArenaVisibilityController)
+    phase/                  ← Empty – phases moved to api/phase/
+    loader/
+    MicroGamesPlugin.kt
+```
+
+## Rules
+
+1. **API module**: Only interfaces, data classes, abstract types. No `implementation` of Bukkit/Paper.
+2. **Plugin module**: Every class that implements an API interface goes in `.../bukkit/api/` (or subpackages like `api/arena/`, `api/phase/`).
+3. **Provider pattern**: If the plugin exposes its own API, use `XxxProvider.api` analogous to McLib.
+4. **Plugin class**: Sets `Provider.api = ApiImpl(...)` on startup and uses the implementations.
