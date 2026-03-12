@@ -6,6 +6,7 @@ import net.developertobi.game.api.arena.ArenaId
 import net.developertobi.game.api.arena.ArenaManager
 import net.developertobi.game.api.phase.PhaseProvider
 import net.developertobi.game.bukkit.arena.ArenaChatController
+import net.developertobi.game.bukkit.arena.ArenaPlayerBroadcaster
 import net.developertobi.game.bukkit.arena.ArenaVisibilityController
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
@@ -19,6 +20,7 @@ class ArenaManagerImpl(
     private val playerToArena = mutableMapOf<Player, ArenaImpl>()
 
     private val visibilityController = ArenaVisibilityController(plugin, this)
+    private val playerBroadcaster = ArenaPlayerBroadcaster()
 
     init {
         plugin.server.pluginManager.registerEvents(ArenaChatController(this), plugin)
@@ -39,14 +41,18 @@ class ArenaManagerImpl(
 
     fun addPlayerToArena(player: Player, arenaId: ArenaId): Boolean {
         val arena = arenas[arenaId] ?: return false
+        if (arena.currentPhase?.id?.value == "ending") return false
+
         playerToArena[player]?.removePlayer(player)
         arena.addPlayer(player)
         playerToArena[player] = arena
+        playerBroadcaster.onPlayerJoined(player, arena, arena.currentPhase?.id?.value == "in_game")
         return true
     }
 
     fun removePlayerFromArena(player: Player): Boolean {
         val arena = playerToArena.remove(player) ?: return false
+        playerBroadcaster.onPlayerLeft(player, arena)
         arena.removePlayer(player)
         return true
     }

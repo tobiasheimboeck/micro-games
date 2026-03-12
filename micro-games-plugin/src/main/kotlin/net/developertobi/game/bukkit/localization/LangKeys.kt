@@ -9,4 +9,8 @@ object LangKeys {
     val PHASE_IN_GAME_LOBBY_ACTIONBAR = LangKey.of("microgames.phase.in_game_lobby.actionbar")
     val PHASE_IN_GAME = LangKey.of("microgames.phase.in_game")
     val PHASE_ENDING = LangKey.of("microgames.phase.ending")
+
+    val ARENA_PLAYER_JOIN = LangKey.of("microgames.arena.player_join")
+    val ARENA_PLAYER_JOIN_SPECTATOR = LangKey.of("microgames.arena.player_join_spectator")
+    val ARENA_PLAYER_LEAVE = LangKey.of("microgames.arena.player_leave")
 }

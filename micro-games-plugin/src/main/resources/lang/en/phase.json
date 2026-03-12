@@ -4,5 +4,8 @@
   "microgames.phase.in_game_lobby": "<gold><gameName> starts in <remaining> s</gold>",
   "microgames.phase.in_game_lobby.actionbar": "<gray><gameName> starts in </gray><gold><remaining></gold><gray> seconds...</gray>",
   "microgames.phase.in_game": "<aqua>In-Game: <gameName></aqua>",
-  "microgames.phase.ending": "<red>Ending: <gameName> – <remaining> s</red>"
+  "microgames.phase.ending": "<red>Ending: <gameName> – <remaining> s</red>",
+  "microgames.arena.player_join": "<green><player> joined the arena.</green>",
+  "microgames.arena.player_join_spectator": "<gray><player> joined as spectator.</gray>",
+  "microgames.arena.player_leave": "<red><player> left the arena.</red>"
 }
