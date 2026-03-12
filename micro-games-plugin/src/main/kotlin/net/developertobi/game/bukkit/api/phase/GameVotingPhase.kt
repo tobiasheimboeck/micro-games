@@ -7,8 +7,9 @@ import net.developertobi.game.api.bossbar.BossBarColor
 import net.developertobi.game.api.bossbar.BossBarOverlay
 import net.developertobi.game.api.phase.Phase
 import net.developertobi.game.api.phase.PhaseId
-import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.format.NamedTextColor
+import net.developertobi.game.bukkit.localization.LangKeys
+import net.developertobi.mclib.api.McLibProvider
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import org.bukkit.Bukkit
 import org.bukkit.plugin.Plugin
 import org.bukkit.scheduler.BukkitTask
@@ -30,7 +31,10 @@ class GameVotingPhase(
         var remaining = durationSeconds
 
         bossBar = context.createBossBar(
-            Component.text("Game Voting – $remaining s").color(NamedTextColor.GREEN),
+            McLibProvider.api.localizationController.line(
+                LangKeys.PHASE_GAME_VOTING,
+                Placeholder.unparsed("remaining", remaining.toString()),
+            ),
             1f,
             BossBarColor.GREEN,
             BossBarOverlay.NOTCHED_10,
@@ -48,7 +52,12 @@ class GameVotingPhase(
                 context.advanceToNextPhase()
                 return@Runnable
             }
-            bossBar?.name(Component.text("Game Voting – $remaining s").color(NamedTextColor.GREEN))
+            bossBar?.name(
+                McLibProvider.api.localizationController.line(
+                    LangKeys.PHASE_GAME_VOTING,
+                    Placeholder.unparsed("remaining", remaining.toString()),
+                ),
+            )
             bossBar?.progress(remaining.toFloat() / durationSeconds)
             remaining--
         }, 0L, 20L)

@@ -7,8 +7,9 @@ import net.developertobi.game.api.bossbar.BossBarOverlay
 import net.developertobi.game.api.game.getProperties
 import net.developertobi.game.api.phase.Phase
 import net.developertobi.game.api.phase.PhaseId
-import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.format.NamedTextColor
+import net.developertobi.game.bukkit.localization.LangKeys
+import net.developertobi.mclib.api.McLibProvider
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import org.bukkit.Bukkit
 import org.bukkit.plugin.Plugin
 import org.bukkit.scheduler.BukkitTask
@@ -28,7 +29,11 @@ class EndingPhase(
         val gameName = context.selectedGame?.getProperties()?.name ?: "Game"
 
         bossBar = context.createBossBar(
-            Component.text("Ending: $gameName – $remaining s").color(NamedTextColor.RED),
+            McLibProvider.api.localizationController.line(
+                LangKeys.PHASE_ENDING,
+                Placeholder.unparsed("gameName", gameName),
+                Placeholder.unparsed("remaining", remaining.toString()),
+            ),
             1f,
             BossBarColor.RED,
             BossBarOverlay.NOTCHED_10,
@@ -46,7 +51,13 @@ class EndingPhase(
                 context.advanceToNextPhase()
                 return@Runnable
             }
-            bossBar?.name(Component.text("Ending: $gameName – $remaining s").color(NamedTextColor.RED))
+            bossBar?.name(
+                McLibProvider.api.localizationController.line(
+                    LangKeys.PHASE_ENDING,
+                    Placeholder.unparsed("gameName", gameName),
+                    Placeholder.unparsed("remaining", remaining.toString()),
+                ),
+            )
             bossBar?.progress(remaining.toFloat() / durationSeconds)
             remaining--
         }, 0L, 20L)

@@ -7,8 +7,9 @@ import net.developertobi.game.api.bossbar.BossBarOverlay
 import net.developertobi.game.api.game.getProperties
 import net.developertobi.game.api.phase.Phase
 import net.developertobi.game.api.phase.PhaseId
-import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.format.NamedTextColor
+import net.developertobi.game.bukkit.localization.LangKeys
+import net.developertobi.mclib.api.McLibProvider
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import org.bukkit.Bukkit
 import org.bukkit.plugin.Plugin
 import org.bukkit.scheduler.BukkitTask
@@ -28,7 +29,11 @@ class InGameLobbyPhase(
         val gameName = context.selectedGame?.getProperties()?.name ?: "Game"
 
         bossBar = context.createBossBar(
-            Component.text("$gameName startet in $remaining s").color(NamedTextColor.GOLD),
+            McLibProvider.api.localizationController.line(
+                LangKeys.PHASE_IN_GAME_LOBBY,
+                Placeholder.unparsed("gameName", gameName),
+                Placeholder.unparsed("remaining", remaining.toString()),
+            ),
             1f,
             BossBarColor.YELLOW,
             BossBarOverlay.NOTCHED_10,
@@ -47,15 +52,22 @@ class InGameLobbyPhase(
                 return@Runnable
             }
 
-            bossBar?.name(Component.text("$gameName startet in $remaining s").color(NamedTextColor.GOLD))
+            bossBar?.name(
+                McLibProvider.api.localizationController.line(
+                    LangKeys.PHASE_IN_GAME_LOBBY,
+                    Placeholder.unparsed("gameName", gameName),
+                    Placeholder.unparsed("remaining", remaining.toString()),
+                ),
+            )
             bossBar?.progress(remaining.toFloat() / durationSeconds)
 
             for (player in context.players) {
                 player.sendActionBar(
-                    Component.text("$gameName startet in ")
-                        .color(NamedTextColor.GRAY)
-                        .append(Component.text("$remaining").color(NamedTextColor.GOLD))
-                        .append(Component.text(" Sekunden...").color(NamedTextColor.GRAY)),
+                    McLibProvider.api.localizationController.line(
+                        LangKeys.PHASE_IN_GAME_LOBBY_ACTIONBAR,
+                        Placeholder.unparsed("gameName", gameName),
+                        Placeholder.unparsed("remaining", remaining.toString()),
+                    ),
                 )
             }
 

@@ -23,6 +23,7 @@ import net.developertobi.game.bukkit.api.stats.StatsServiceImpl
 import net.developertobi.game.bukkit.database.DatabaseConfig
 import net.developertobi.game.bukkit.database.PluginDatabase
 import net.developertobi.game.bukkit.loader.GameLoader
+import net.developertobi.mclib.api.McLibProvider
 import org.bukkit.plugin.java.JavaPlugin
 
 class MicroGamesPlugin : JavaPlugin() {
@@ -35,6 +36,8 @@ class MicroGamesPlugin : JavaPlugin() {
     override fun onEnable() {
         saveDefaultConfig()
         reloadConfig()
+
+        McLibProvider.api.localizationController.registerLanguageSource(classLoader)
 
         gameLoader = GameLoader(this)
         gameLoader.loadAll()

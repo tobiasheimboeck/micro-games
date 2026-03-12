@@ -14,6 +14,7 @@ dependencies {
     implementation(libs.exposed.jdbc)
     implementation(libs.hikaricp)
     implementation(libs.mariadb.java.client)
+    
     compileOnly("io.papermc.paper:paper-api:1.21.11-R0.1-SNAPSHOT")
     compileOnly("net.developertobi.mclib:mclib-api:1.0-SNAPSHOT")
 }

@@ -8,8 +8,9 @@ import net.developertobi.game.api.game.getProperties
 import net.developertobi.game.api.phase.Phase
 import net.developertobi.game.api.phase.PhaseId
 import net.developertobi.game.api.phase.SubPhase
-import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.format.NamedTextColor
+import net.developertobi.game.bukkit.localization.LangKeys
+import net.developertobi.mclib.api.McLibProvider
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 
 class InGamePhase : Phase {
     override val id: PhaseId = PhaseId("in_game")
@@ -20,7 +21,10 @@ class InGamePhase : Phase {
     override fun onStart(context: ArenaContext) {
         val gameName = context.selectedGame?.getProperties()?.name ?: "Game"
         bossBar = context.createBossBar(
-            Component.text("In-Game: $gameName").color(NamedTextColor.AQUA),
+            McLibProvider.api.localizationController.line(
+                LangKeys.PHASE_IN_GAME,
+                Placeholder.unparsed("gameName", gameName),
+            ),
             1f,
             BossBarColor.BLUE,
             BossBarOverlay.PROGRESS,

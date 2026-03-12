@@ -1,0 +1,8 @@
+{
+  "microgames.phase.map_voting": "<gold>Map Voting – <remaining> s</gold>",
+  "microgames.phase.game_voting": "<green>Game Voting – <remaining> s</green>",
+  "microgames.phase.in_game_lobby": "<gold><gameName> startet in <remaining> s</gold>",
+  "microgames.phase.in_game_lobby.actionbar": "<gray><gameName> startet in </gray><gold><remaining></gold><gray> Sekunden...</gray>",
+  "microgames.phase.in_game": "<aqua>In-Game: <gameName></aqua>",
+  "microgames.phase.ending": "<red>Ende: <gameName> – <remaining> s</red>"
+}
