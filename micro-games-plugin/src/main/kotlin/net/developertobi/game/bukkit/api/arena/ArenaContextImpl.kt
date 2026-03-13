@@ -20,6 +20,12 @@ class ArenaContextImpl(
 
     override val players: Collection<Player> = arena.players
 
+    override val maxPlayers: Int = arena.maxPlayers
+
+    override val minPlayers: Int = arena.minPlayers
+
+    override val allowSpectators: Boolean = arena.allowSpectators
+
     override val currentPhase: Phase? = arena.currentPhase
 
     override val currentSubPhase: SubPhase? = arena.currentSubPhase

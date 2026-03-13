@@ -1,5 +1,15 @@
 # MicroGames - Configuration
 
+# Number of arenas to create on server startup. Each arena can host a separate game instance.
+arenas:
+  count: 1
+  # Maximum players that can join an arena. Join attempts are rejected when full.
+  max-players: 8
+  # Minimum players required before the game can start. Phases may use this for countdown logic.
+  min-players: 2
+  # Allow players to join as spectators when the arena is full.
+  allow-spectators: true
+
 database:
   host: localhost
   port: 3306

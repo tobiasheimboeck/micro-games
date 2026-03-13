@@ -14,6 +14,9 @@ class ArenaImpl(
     override val id: ArenaId,
     private val phases: List<Phase>,
     private val visibilityController: ArenaVisibilityController,
+    val maxPlayers: Int,
+    val minPlayers: Int,
+    val allowSpectators: Boolean,
 ) : Arena {
 
     val players: MutableCollection<Player> = mutableListOf()

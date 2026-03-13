@@ -5,6 +5,7 @@ import net.developertobi.game.api.arena.ArenaContext
 import net.developertobi.game.api.arena.ArenaId
 import net.developertobi.game.api.arena.ArenaManager
 import net.developertobi.game.api.phase.PhaseProvider
+import net.developertobi.game.bukkit.config.ArenaConfig
 import net.developertobi.game.bukkit.arena.ArenaChatController
 import net.developertobi.game.bukkit.arena.ArenaPlayerBroadcaster
 import net.developertobi.game.bukkit.arena.ArenaVisibilityController
@@ -14,6 +15,7 @@ import org.bukkit.plugin.Plugin
 class ArenaManagerImpl(
     plugin: Plugin,
     private val phaseProvider: PhaseProvider,
+    private val arenaConfig: ArenaConfig,
 ) : ArenaManager {
 
     private val arenas = mutableMapOf<ArenaId, ArenaImpl>()
@@ -28,7 +30,14 @@ class ArenaManagerImpl(
 
     override fun createArena(arenaId: ArenaId): Arena {
         val phases = phaseProvider.createPhases(arenaId)
-        val arena = ArenaImpl(arenaId, phases, visibilityController)
+        val arena = ArenaImpl(
+            id = arenaId,
+            phases = phases,
+            visibilityController = visibilityController,
+            maxPlayers = arenaConfig.maxPlayers,
+            minPlayers = arenaConfig.minPlayers,
+            allowSpectators = arenaConfig.allowSpectators,
+        )
         arenas[arenaId] = arena
         return arena
     }
@@ -42,11 +51,13 @@ class ArenaManagerImpl(
     fun addPlayerToArena(player: Player, arenaId: ArenaId): Boolean {
         val arena = arenas[arenaId] ?: return false
         if (arena.currentPhase?.id?.value == "ending") return false
+        if (arena.players.size >= arena.maxPlayers && !arena.allowSpectators) return false
 
         playerToArena[player]?.removePlayer(player)
         arena.addPlayer(player)
         playerToArena[player] = arena
-        playerBroadcaster.onPlayerJoined(player, arena, arena.currentPhase?.id?.value == "in_game")
+        val isSpectator = arena.currentPhase?.id?.value == "in_game" || arena.players.size > arena.maxPlayers
+        playerBroadcaster.onPlayerJoined(player, arena, isSpectator)
         return true
     }
 

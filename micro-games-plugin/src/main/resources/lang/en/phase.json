@@ -1,10 +1,11 @@
 {
   "microgames.phase.map_voting": "<gold>Map Voting – <remaining> s</gold>",
   "microgames.phase.game_voting": "<green>Game Voting – <remaining> s</green>",
-  "microgames.phase.in_game_lobby": "<gold><gameName> starts in <remaining> s</gold>",
-  "microgames.phase.in_game_lobby.actionbar": "<gray><gameName> starts in </gray><gold><remaining></gold><gray> seconds...</gray>",
-  "microgames.phase.in_game": "<aqua>In-Game: <gameName></aqua>",
-  "microgames.phase.ending": "<red>Ending: <gameName> – <remaining> s</red>",
+  "microgames.phase.in_game_lobby": "<gold><game_name> starts in <remaining> s</gold>",
+  "microgames.phase.in_game_lobby.waiting": "<yellow>Waiting for players (<current>/<min>)</yellow>",
+  "microgames.phase.in_game_lobby.actionbar": "<gray><game_name> starts in </gray><gold><remaining></gold><gray> seconds...</gray>",
+  "microgames.phase.in_game": "<aqua>In-Game: <game_name></aqua>",
+  "microgames.phase.ending": "<red>Ending: <game_name> – <remaining> s</red>",
   "microgames.arena.player_join": "<green><player> joined the arena.</green>",
   "microgames.arena.player_join_spectator": "<gray><player> joined as spectator.</gray>",
   "microgames.arena.player_leave": "<red><player> left the arena.</red>"

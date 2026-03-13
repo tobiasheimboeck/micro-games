@@ -34,19 +34,22 @@ class InGameLobbyPhase(
         bossBar = context.createBossBar(
             McLibProvider.api.localizationController.line(
                 LangKeys.PHASE_IN_GAME_LOBBY,
-                Placeholder.unparsed("gameName", gameName),
+                Placeholder.unparsed("game_name", gameName),
                 Placeholder.unparsed("remaining", remaining.toString()),
             ),
             1f,
             BossBarColor.YELLOW,
             BossBarOverlay.NOTCHED_10,
         )
+        
         for (player in context.players) {
             bossBar!!.addPlayer(player)
         }
 
         countdownTask = Bukkit.getScheduler().runTaskTimer(plugin, Runnable {
-            if (remaining <= 0) {
+            val hasEnoughPlayers = context.players.size >= context.minPlayers
+
+            if (hasEnoughPlayers && remaining <= 0) {
                 countdownTask?.cancel()
                 countdownTask = null
                 bossBar?.removeAll()
@@ -55,32 +58,43 @@ class InGameLobbyPhase(
                 return@Runnable
             }
 
-            val audience = Audience.audience(context.players)
-            MicroGamesProvider.api.soundService.play(
-                if (remaining == 1) GameSound.COUNTDOWN_FINAL else GameSound.COUNTDOWN_TICK,
-                audience,
-            )
+            if (hasEnoughPlayers) {
+                val audience = Audience.audience(context.players)
+                MicroGamesProvider.api.soundService.play(
+                    if (remaining == 1) GameSound.COUNTDOWN_FINAL else GameSound.COUNTDOWN_TICK,
+                    audience,
+                )
 
-            bossBar?.name(
-                McLibProvider.api.localizationController.line(
-                    LangKeys.PHASE_IN_GAME_LOBBY,
-                    Placeholder.unparsed("gameName", gameName),
-                    Placeholder.unparsed("remaining", remaining.toString()),
-                ),
-            )
-            bossBar?.progress(remaining.toFloat() / durationSeconds)
-
-            for (player in context.players) {
-                player.sendActionBar(
+                bossBar?.name(
                     McLibProvider.api.localizationController.line(
-                        LangKeys.PHASE_IN_GAME_LOBBY_ACTIONBAR,
-                        Placeholder.unparsed("gameName", gameName),
+                        LangKeys.PHASE_IN_GAME_LOBBY,
+                        Placeholder.unparsed("game_name", gameName),
                         Placeholder.unparsed("remaining", remaining.toString()),
                     ),
                 )
-            }
+                bossBar?.progress(remaining.toFloat() / durationSeconds)
 
-            remaining--
+                for (player in context.players) {
+                    player.sendActionBar(
+                        McLibProvider.api.localizationController.line(
+                            LangKeys.PHASE_IN_GAME_LOBBY_ACTIONBAR,
+                            Placeholder.unparsed("game_name", gameName),
+                            Placeholder.unparsed("remaining", remaining.toString()),
+                        ),
+                    )
+                }
+
+                remaining--
+            } else {
+                bossBar?.name(
+                    McLibProvider.api.localizationController.line(
+                        LangKeys.PHASE_IN_GAME_LOBBY_WAITING,
+                        Placeholder.unparsed("current", context.players.size.toString()),
+                        Placeholder.unparsed("min", context.minPlayers.toString()),
+                    ),
+                )
+                bossBar?.progress(0f)
+            }
         }, 0L, 20L)
     }
 

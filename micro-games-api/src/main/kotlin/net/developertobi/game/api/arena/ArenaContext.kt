@@ -16,6 +16,9 @@ import org.bukkit.entity.Player
 interface ArenaContext {
     val arenaId: ArenaId
     val players: Collection<Player>
+    val maxPlayers: Int
+    val minPlayers: Int
+    val allowSpectators: Boolean
     val currentPhase: Phase?
     val currentSubPhase: SubPhase?
     val selectedGame: MicroGame?

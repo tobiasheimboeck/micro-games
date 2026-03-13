@@ -34,7 +34,7 @@ class EndingPhase(
         bossBar = context.createBossBar(
             McLibProvider.api.localizationController.line(
                 LangKeys.PHASE_ENDING,
-                Placeholder.unparsed("gameName", gameName),
+                Placeholder.unparsed("game_name", gameName),
                 Placeholder.unparsed("remaining", remaining.toString()),
             ),
             1f,
@@ -62,7 +62,7 @@ class EndingPhase(
             bossBar?.name(
                 McLibProvider.api.localizationController.line(
                     LangKeys.PHASE_ENDING,
-                    Placeholder.unparsed("gameName", gameName),
+                    Placeholder.unparsed("game_name", gameName),
                     Placeholder.unparsed("remaining", remaining.toString()),
                 ),
             )

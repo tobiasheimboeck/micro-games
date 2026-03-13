@@ -21,10 +21,12 @@ import net.developertobi.game.bukkit.api.sound.SoundServiceImpl
 import net.developertobi.game.bukkit.api.stats.BufferedStatsService
 import net.developertobi.game.bukkit.api.stats.DelegatingStatsService
 import net.developertobi.game.bukkit.api.stats.StatsServiceImpl
+import net.developertobi.game.bukkit.config.ArenaConfig
 import net.developertobi.game.bukkit.database.DatabaseConfig
 import net.developertobi.game.bukkit.database.PluginDatabase
 import net.developertobi.game.bukkit.loader.GameLoader
 import net.developertobi.mclib.api.McLibProvider
+import net.developertobi.mclib.api.plugin.McLibPluginBootstrap
 import org.bukkit.plugin.java.JavaPlugin
 
 class MicroGamesPlugin : JavaPlugin() {
@@ -35,10 +37,15 @@ class MicroGamesPlugin : JavaPlugin() {
     private var reconnectJob: Job? = null
 
     override fun onEnable() {
+        McLibPluginBootstrap.setup(this) {
+            localizationEnabled = true
+            onReady = { initPlugin() }
+        }
+    }
+
+    private fun initPlugin() {
         saveDefaultConfig()
         reloadConfig()
-
-        McLibProvider.api.localizationController.registerLanguageSource(classLoader)
 
         gameLoader = GameLoader(this)
         gameLoader.loadAll()
@@ -61,8 +68,11 @@ class MicroGamesPlugin : JavaPlugin() {
             startReconnectTask(dbConfig, statsService, delegatingStatsService)
         }
 
-        arenaManager = ArenaManagerImpl(this, DefaultPhaseProvider(this))
-        arenaManager.createArena(ArenaId("default")).start()
+        val arenaConfig = ArenaConfig.load(config)
+        arenaManager = ArenaManagerImpl(this, DefaultPhaseProvider(this), arenaConfig)
+        repeat(arenaConfig.count) { index ->
+            arenaManager.createArena(ArenaId("arena-${index + 1}")).start()
+        }
         MicroGamesProvider.api = MicroGamesApiImpl(
             loadedGames = gameLoader.loadedGames,
             arenaManager = arenaManager,

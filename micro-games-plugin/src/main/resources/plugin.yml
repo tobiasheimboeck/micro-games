@@ -2,3 +2,5 @@ name: MicroGames
 version: 1.0-SNAPSHOT
 main: net.developertobi.game.bukkit.MicroGamesPlugin
 api-version: "1.21"
+depend:
+  - McLib

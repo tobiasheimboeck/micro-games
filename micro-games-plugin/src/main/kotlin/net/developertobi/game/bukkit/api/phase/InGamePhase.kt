@@ -26,7 +26,7 @@ class InGamePhase : Phase {
         bossBar = context.createBossBar(
             McLibProvider.api.localizationController.line(
                 LangKeys.PHASE_IN_GAME,
-                Placeholder.unparsed("gameName", gameName),
+                Placeholder.unparsed("game_name", gameName),
             ),
             1f,
             BossBarColor.BLUE,
