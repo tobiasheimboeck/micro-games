@@ -14,6 +14,7 @@ import net.kyori.adventure.audience.Audience
 import net.developertobi.game.bukkit.localization.LangKeys
 import net.developertobi.mclib.api.McLibProvider
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
+import org.bukkit.entity.Player
 
 class InGamePhase : Phase {
     override val id: PhaseId = PhaseId("in_game")
@@ -45,6 +46,10 @@ class InGamePhase : Phase {
     override fun onStop(context: ArenaContext) {
         bossBar?.removeAll()
         bossBar = null
+    }
+
+    override fun onPlayerLeft(context: ArenaContext, player: Player) {
+        bossBar?.removePlayer(player)
     }
 
     fun getSubPhases(context: ArenaContext): List<SubPhase> {

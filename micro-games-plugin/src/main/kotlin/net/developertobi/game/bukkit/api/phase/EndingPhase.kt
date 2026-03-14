@@ -14,6 +14,7 @@ import net.developertobi.game.bukkit.localization.LangKeys
 import net.developertobi.mclib.api.McLibProvider
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import org.bukkit.Bukkit
+import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 import org.bukkit.scheduler.BukkitTask
 
@@ -76,5 +77,9 @@ class EndingPhase(
         task = null
         bossBar?.removeAll()
         bossBar = null
+    }
+
+    override fun onPlayerLeft(context: ArenaContext, player: Player) {
+        bossBar?.removePlayer(player)
     }
 }

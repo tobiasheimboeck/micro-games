@@ -41,6 +41,7 @@ class ArenaImpl(
 
     fun removePlayer(player: Player) {
         if (players.remove(player)) {
+            currentPhase?.onPlayerLeft(context, player)
             visibilityController.onPlayerLeftArena(player, this)
         }
     }

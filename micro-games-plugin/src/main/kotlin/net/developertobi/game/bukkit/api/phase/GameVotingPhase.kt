@@ -13,6 +13,7 @@ import net.developertobi.game.bukkit.localization.LangKeys
 import net.developertobi.mclib.api.McLibProvider
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import org.bukkit.Bukkit
+import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 import org.bukkit.scheduler.BukkitTask
 
@@ -46,6 +47,24 @@ class GameVotingPhase(
         }
 
         task = Bukkit.getScheduler().runTaskTimer(plugin, Runnable {
+            val hasEnoughPlayers = context.players.size >= context.minPlayers
+
+            for (player in context.players) {
+                bossBar?.addPlayer(player)
+            }
+
+            if (!hasEnoughPlayers) {
+                bossBar?.name(
+                    McLibProvider.api.localizationController.line(
+                        LangKeys.PHASE_IN_GAME_LOBBY_WAITING,
+                        Placeholder.unparsed("current", context.players.size.toString()),
+                        Placeholder.unparsed("min", context.minPlayers.toString()),
+                    ),
+                )
+                bossBar?.progress(0f)
+                return@Runnable
+            }
+
             if (remaining <= 0) {
                 task?.cancel()
                 task = null
@@ -77,5 +96,9 @@ class GameVotingPhase(
         task = null
         bossBar?.removeAll()
         bossBar = null
+    }
+
+    override fun onPlayerLeft(context: ArenaContext, player: Player) {
+        bossBar?.removePlayer(player)
     }
 }
