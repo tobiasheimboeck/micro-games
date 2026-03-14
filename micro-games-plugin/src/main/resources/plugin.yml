@@ -4,3 +4,7 @@ main: net.developertobi.game.bukkit.MicroGamesPlugin
 api-version: "1.21"
 depend:
   - McLib
+
+commands:
+  arena:
+    description: Arena commands (join, leave, list)

@@ -1,0 +1,94 @@
+---
+description: McLib command patterns for arena and subcommands
+globs: **/command/**/*.kt
+alwaysApply: false
+---
+
+# McLib Command Patterns
+
+## Main Command
+
+Use `@McCommand` with `name`, `title`, and `type`:
+
+```kotlin
+@McCommand(
+    type = McCommandType.PAPER,
+    name = "arena",
+    title = "Arena",
+)
+class ArenaCommand : McMainCommandExecutor() { ... }
+```
+
+Register in plugin: `McLibProvider.api.commandController.registerCommand(ArenaCommand(), this)`.
+
+## McSubCommand Annotation
+
+### length vs minLength/maxLength
+
+- **`length`**: Exact argument count for subcommands without optional args.
+- **`minLength` / `maxLength`**: For subcommands with optional arguments.
+
+### parts
+
+- **Relative to main command** – do not include the main command name.
+- **`<arg>`** = required argument.
+- **`[arg]`** = optional argument.
+
+### Examples
+
+```kotlin
+// No args – exact length
+@McSubCommand(
+    length = 1,
+    parts = "leave",
+    permission = "arena.leave",
+)
+
+// One required arg
+@McSubCommand(
+    length = 2,
+    parts = "info <arena>",
+    permission = "arena.info",
+)
+
+// Optional arg – use minLength/maxLength
+@McSubCommand(
+    minLength = 1,
+    maxLength = 2,
+    parts = "join [arena]",
+    permission = "arena.join",
+)
+```
+
+### Permission
+
+Use `arena.<subcommand>` for arena-related commands.
+
+## Player-Only Commands
+
+Use `sender.castTo(Player::class.java) ?: return` for subcommands that require a player:
+
+```kotlin
+override fun execute(sender: McCommandSender, args: List<String>) {
+    val player = sender.castTo(Player::class.java) ?: return
+    // ...
+}
+```
+
+## Messages
+
+Use `McLibProvider.api.localizationController.line()` directly:
+
+```kotlin
+sender.sendMessage(McLibProvider.api.localizationController.line(LangKeys.SOME_KEY))
+sender.sendMessage(McLibProvider.api.localizationController.line(LangKeys.SOME_KEY, Placeholder.unparsed("name", value)))
+```
+
+## findArgument for Optional Args
+
+When using optional args, use `findArgument` to read them:
+
+```kotlin
+val arenaArg = findArgument(player, "arena", args, String::class.java)
+// arenaArg is null when user omitted the optional argument
+```

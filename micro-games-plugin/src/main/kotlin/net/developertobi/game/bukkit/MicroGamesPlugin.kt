@@ -24,6 +24,7 @@ import net.developertobi.game.bukkit.api.stats.StatsServiceImpl
 import net.developertobi.game.bukkit.config.ArenaConfig
 import net.developertobi.game.bukkit.database.DatabaseConfig
 import net.developertobi.game.bukkit.database.PluginDatabase
+import net.developertobi.game.bukkit.command.ArenaCommand
 import net.developertobi.game.bukkit.loader.GameLoader
 import net.developertobi.mclib.api.McLibProvider
 import net.developertobi.mclib.api.plugin.McLibPluginBootstrap
@@ -70,9 +71,11 @@ class MicroGamesPlugin : JavaPlugin() {
 
         val arenaConfig = ArenaConfig.load(config)
         arenaManager = ArenaManagerImpl(this, DefaultPhaseProvider(this), arenaConfig)
+
         repeat(arenaConfig.count) { index ->
             arenaManager.createArena(ArenaId("arena-${index + 1}")).start()
         }
+
         MicroGamesProvider.api = MicroGamesApiImpl(
             loadedGames = gameLoader.loadedGames,
             arenaManager = arenaManager,
@@ -83,6 +86,8 @@ class MicroGamesPlugin : JavaPlugin() {
             minecraftDispatcher = minecraftDispatcher,
             databaseDispatcher = databaseDispatcher,
         )
+
+        McLibProvider.api.commandController.registerCommand(ArenaCommand(), this)
     }
 
     private fun startReconnectTask(

@@ -48,7 +48,7 @@ class ArenaManagerImpl(
         playerToArena.keys.removeAll { playerToArena[it] == arena }
     }
 
-    fun addPlayerToArena(player: Player, arenaId: ArenaId): Boolean {
+    override fun addPlayerToArena(player: Player, arenaId: ArenaId): Boolean {
         val arena = arenas[arenaId] ?: return false
         if (arena.currentPhase?.id?.value == "ending") return false
         if (arena.players.size >= arena.maxPlayers && !arena.allowSpectators) return false
@@ -61,7 +61,7 @@ class ArenaManagerImpl(
         return true
     }
 
-    fun removePlayerFromArena(player: Player): Boolean {
+    override fun removePlayerFromArena(player: Player): Boolean {
         val arena = playerToArena.remove(player) ?: return false
         playerBroadcaster.onPlayerLeft(player, arena)
         arena.removePlayer(player)

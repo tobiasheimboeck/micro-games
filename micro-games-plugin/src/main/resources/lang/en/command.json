@@ -1,0 +1,15 @@
+{
+  "mclib.base.usage.title": "<gold>--- <title> ---</gold>",
+  "mclib.base.usage": "<gray><command></gray>",
+  "microgames.command.player_only": "<red>This command can only be used by players.</red>",
+  "microgames.command.join.success": "<green>Joined arena <arena>.</green>",
+  "microgames.command.join.invalid_arena": "<red>Unknown arena: <arena></red>",
+  "microgames.command.join.no_available": "<red>No arena available to join.</red>",
+  "microgames.command.join.full": "<red>That arena is full.</red>",
+  "microgames.command.join.ending": "<red>That arena is ending. You cannot join.</red>",
+  "microgames.command.join.failed": "<red>Could not join the arena.</red>",
+  "microgames.command.leave.success": "<green>Left the arena.</green>",
+  "microgames.command.leave.not_in_arena": "<red>You are not in an arena.</red>",
+  "microgames.command.list.header": "<gold>--- Arenas ---</gold>",
+  "microgames.command.list.line": "<gray><arena></gray>: <white><count></white>/<max>"
+}

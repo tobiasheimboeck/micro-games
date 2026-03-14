@@ -14,4 +14,16 @@ object LangKeys {
     val ARENA_PLAYER_JOIN = LangKey.of("microgames.arena.player_join")
     val ARENA_PLAYER_JOIN_SPECTATOR = LangKey.of("microgames.arena.player_join_spectator")
     val ARENA_PLAYER_LEAVE = LangKey.of("microgames.arena.player_leave")
+
+    val COMMAND_PLAYER_ONLY = LangKey.of("microgames.command.player_only")
+    val COMMAND_JOIN_SUCCESS = LangKey.of("microgames.command.join.success")
+    val COMMAND_JOIN_INVALID_ARENA = LangKey.of("microgames.command.join.invalid_arena")
+    val COMMAND_JOIN_NO_AVAILABLE = LangKey.of("microgames.command.join.no_available")
+    val COMMAND_JOIN_FULL = LangKey.of("microgames.command.join.full")
+    val COMMAND_JOIN_ENDING = LangKey.of("microgames.command.join.ending")
+    val COMMAND_JOIN_FAILED = LangKey.of("microgames.command.join.failed")
+    val COMMAND_LEAVE_SUCCESS = LangKey.of("microgames.command.leave.success")
+    val COMMAND_LEAVE_NOT_IN_ARENA = LangKey.of("microgames.command.leave.not_in_arena")
+    val COMMAND_LIST_HEADER = LangKey.of("microgames.command.list.header")
+    val COMMAND_LIST_LINE = LangKey.of("microgames.command.list.line")
 }
