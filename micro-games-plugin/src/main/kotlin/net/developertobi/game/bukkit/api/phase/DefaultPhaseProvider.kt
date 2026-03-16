@@ -8,6 +8,7 @@ import org.bukkit.plugin.Plugin
 class DefaultPhaseProvider(
     private val plugin: Plugin,
 ) : PhaseProvider {
+
     override fun createPhases(arenaId: ArenaId): List<Phase> = listOf(
         MapVotingPhase(plugin),
         GameVotingPhase(plugin),

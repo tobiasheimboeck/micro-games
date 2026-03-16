@@ -5,19 +5,25 @@ import net.developertobi.game.api.arena.ArenaContext
 import net.developertobi.game.api.arena.ArenaId
 import net.developertobi.game.api.game.MicroGame
 import net.developertobi.game.api.phase.Phase
-import net.developertobi.game.api.phase.SubPhase
+import net.developertobi.game.api.phase.GameLoopPhase
 import net.developertobi.game.bukkit.api.phase.InGamePhase
 import net.developertobi.game.bukkit.arena.ArenaVisibilityController
 import org.bukkit.entity.Player
+import org.bukkit.event.HandlerList
+import org.bukkit.event.Listener
+import org.bukkit.plugin.Plugin
 
 class ArenaImpl(
     override val id: ArenaId,
+    private val plugin: Plugin,
     private val phases: List<Phase>,
     private val visibilityController: ArenaVisibilityController,
     val maxPlayers: Int,
     val minPlayers: Int,
     val allowSpectators: Boolean,
 ) : Arena {
+
+    private val gameLoopListeners = mutableListOf<Listener>()
 
     val players: MutableCollection<Player> = mutableListOf()
     val context: ArenaContext = ArenaContextImpl(this)
@@ -26,12 +32,12 @@ class ArenaImpl(
 
     var currentPhase: Phase? = null
         private set
-    var currentSubPhase: SubPhase? = null
+    var currentGameLoopPhase: GameLoopPhase? = null
         private set
 
     private var phaseIndex: Int = -1
-    private var subPhaseIndex: Int = -1
-    private var subPhases: List<SubPhase> = emptyList()
+    private var gameLoopPhaseIndex: Int = -1
+    private var gameLoopPhases: List<GameLoopPhase> = emptyList()
 
     fun addPlayer(player: Player) {
         if (players.add(player)) {
@@ -50,11 +56,22 @@ class ArenaImpl(
         advanceToNextPhase()
     }
 
+    fun registerListener(listener: Listener) {
+        gameLoopListeners.add(listener)
+        plugin.server.pluginManager.registerEvents(listener, plugin)
+    }
+
+    private fun unregisterAllGameLoopListeners() {
+        gameLoopListeners.forEach { HandlerList.unregisterAll(it) }
+        gameLoopListeners.clear()
+    }
+
     fun advanceToNextPhase() {
-        currentSubPhase?.onStop(context)
-        currentSubPhase = null
-        subPhaseIndex = -1
-        subPhases = emptyList()
+        unregisterAllGameLoopListeners()
+        currentGameLoopPhase?.onStop(context)
+        currentGameLoopPhase = null
+        gameLoopPhaseIndex = -1
+        gameLoopPhases = emptyList()
 
         currentPhase?.onStop(context)
 
@@ -68,28 +85,29 @@ class ArenaImpl(
         nextPhase.onStart(context)
 
         if (nextPhase is InGamePhase) {
-            subPhases = nextPhase.getSubPhases(context)
-            if (subPhases.isNotEmpty()) {
-                advanceToNextSubPhase()
+            gameLoopPhases = nextPhase.getGameLoopPhases(context)
+            if (gameLoopPhases.isNotEmpty()) {
+                advanceToNextGameLoopPhase()
             } else {
                 advanceToNextPhase()
             }
         }
     }
 
-    fun advanceToNextSubPhase() {
-        currentSubPhase?.onStop(context)
+    fun advanceToNextGameLoopPhase() {
+        unregisterAllGameLoopListeners()
+        currentGameLoopPhase?.onStop(context)
 
-        subPhaseIndex++
-        if (subPhaseIndex >= subPhases.size) {
-            currentSubPhase = null
-            subPhaseIndex = -1
+        gameLoopPhaseIndex++
+        if (gameLoopPhaseIndex >= gameLoopPhases.size) {
+            currentGameLoopPhase = null
+            gameLoopPhaseIndex = -1
             advanceToNextPhase()
             return
         }
 
-        val nextSubPhase = subPhases[subPhaseIndex]
-        currentSubPhase = nextSubPhase
-        nextSubPhase.onStart(context)
+        val nextPhase = gameLoopPhases[gameLoopPhaseIndex]
+        currentGameLoopPhase = nextPhase
+        nextPhase.onStart(context)
     }
 }

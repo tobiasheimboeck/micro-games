@@ -1,5 +1,5 @@
 ---
-description: Generic phase and sub-phase system (no hardcoded enums)
+description: Generic phase and game loop phase system (no hardcoded enums)
 globs: **/*.kt
 alwaysApply: false
 ---
@@ -17,22 +17,22 @@ Phases are **not** enums. They are created generically per arena via [PhaseProvi
 - Typical sequence: Map Voting → Game Voting → In-Game Lobby → In-Game → Ending
 - Each arena can have a custom phase configuration
 
-## Sub-Phases (Playing Phase Only)
+## Game Loop Phases (In-Game Phase Only)
 
-- Each [MicroGame] defines its own via [MicroGame.createPlayingSubPhases]
-- Examples: Spleef → "building", "fighting"; TNT Run → "countdown", "running"
-- [ArenaContext.currentSubPhase] is non-null only when in In-Game phase
-- Games advance via [ArenaContext.advanceToNextSubPhase]
+- Each [MicroGame] defines its own via [MicroGame.createGameLoop]
+- Games may have one (e.g. TNT Run) or multiple (e.g. Spleef: "building", "fighting")
+- [ArenaContext.currentGameLoopPhase] is non-null only when in In-Game phase
+- Games advance via [ArenaContext.advanceToNextGameLoopPhase]
 
 ## Key Types
 
 | Type | Purpose |
 |------|---------|
 | [Phase] | Main phase interface (id, name, priority, start, stop) |
-| [SubPhase] | Sub-phase within Playing (game-specific) |
+| [GameLoopPhase] | Game loop phase within In-Game (game-specific) |
 | [PhaseProvider] | Creates phase list per arena |
-| [PhaseId] / [SubPhaseId] | Value class identifiers |
+| [PhaseId] / [GameLoopPhaseId] | Value class identifiers |
 
 ## Reference
 
-Pattern: phases per arena (Multimap<ArenaId, Phase>), priority-based advancement, Playing phase holds game-specific sub-phases.
+Pattern: phases per arena (Multimap<ArenaId, Phase>), priority-based advancement, In-Game phase holds game-specific game loop phases.

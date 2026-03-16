@@ -29,6 +29,7 @@ import net.developertobi.game.bukkit.loader.GameLoader
 import net.developertobi.mclib.api.McLibProvider
 import net.developertobi.mclib.api.plugin.McLibPluginBootstrap
 import org.bukkit.plugin.java.JavaPlugin
+import kotlin.time.Duration.Companion.milliseconds
 
 class MicroGamesPlugin : JavaPlugin() {
 
@@ -99,10 +100,13 @@ class MicroGamesPlugin : JavaPlugin() {
 
         reconnectJob = coroutineScope.launch {
             while (isActive) {
-                delay(dbConfig.reconnectIntervalSeconds.toLong() * 1000L)
+                delay((dbConfig.reconnectIntervalSeconds.toLong() * 1000L).milliseconds)
+
                 if (!isActive) return@launch
+
                 try {
                     PluginDatabase.connect(dbConfig)
+
                     val statsServiceImpl = StatsServiceImpl(this@MicroGamesPlugin, gameLoader.loadedGames, coroutineScope)
                     withContext(Dispatchers.IO) {
                         buffered.flush(statsServiceImpl)
@@ -120,21 +124,23 @@ class MicroGamesPlugin : JavaPlugin() {
     }
 
     override fun onDisable() {
-        val api = MicroGamesProvider.api
-        if (api.statsService is DelegatingStatsService) {
-            val delegate = (api.statsService as DelegatingStatsService).delegate
+        if (MicroGamesProvider.api.statsService is DelegatingStatsService) {
+            val delegate = (MicroGamesProvider.api.statsService as DelegatingStatsService).delegate
             if (delegate is BufferedStatsService && delegate.hasBufferedData()) {
                 logger.warning("Database was offline. Buffered stats will be lost.")
             }
         }
+
         reconnectJob?.cancel()
         reconnectJob = null
         coroutineScope.cancel()
+
         runBlocking {
-            withTimeout(5000) {
+            withTimeout(5000.milliseconds) {
                 coroutineScope.coroutineContext[Job]?.join()
             }
         }
+
         PluginDatabase.disconnect()
         gameLoader.unloadAll()
     }

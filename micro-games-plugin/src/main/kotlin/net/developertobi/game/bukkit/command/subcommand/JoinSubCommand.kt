@@ -15,9 +15,8 @@ import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import org.bukkit.entity.Player
 
 @McSubCommand(
-    minLength = 1,
-    maxLength = 2,
-    parts = "join [arena]",
+    length = 2,
+    parts = "join <arena>",
     permission = "arena.join",
 )
 class JoinSubCommand : McSubCommandExecutor {
@@ -28,26 +27,23 @@ class JoinSubCommand : McSubCommandExecutor {
         val player = sender.castTo(Player::class.java) ?: return
 
         val arenas = arenaManager.getArenas()
-        val arenaArg = findArgument(player, "arena", args, String::class.java)
-        
-        val arenaId = when {
-            arenaArg != null -> ArenaId(arenaArg).takeIf { it in arenas }
-            else -> arenas.firstOrNull { id ->
-                val ctx = arenaManager.getArenaContext(id) ?: return@firstOrNull false
-                ctx.currentPhase?.id?.value != "ending" && (ctx.players.size < ctx.maxPlayers || ctx.allowSpectators)
-            }
-        }
+        val arenaArg = findArgument(player, "arena", args, String::class.java) ?: return
+        val arenaId = ArenaId(arenaArg).takeIf { it in arenas }
 
-        when (arenaId) {
-            null -> when {
-                arenaArg != null -> sender.sendMessage(McLibProvider.api.localizationController.line(LangKeys.COMMAND_JOIN_INVALID_ARENA, Placeholder.unparsed("arena", arenaArg)))
-                else -> sender.sendMessage(McLibProvider.api.localizationController.line(LangKeys.COMMAND_JOIN_NO_AVAILABLE))
-            }
-            else -> handleJoin(sender, player, arenaManager, arenaId)
+        if (arenaId == null) {
+            sender.sendMessage(McLibProvider.api.localizationController.line(LangKeys.COMMAND_JOIN_INVALID_ARENA, Placeholder.unparsed("arena", arenaArg)))
+            return
         }
+        
+        handleJoin(sender, player, arenaManager, arenaId)
     }
 
     private fun handleJoin(sender: McCommandSender, player: Player, arenaManager: ArenaManager, arenaId: ArenaId) {
+        if (arenaManager.getArenaForPlayer(player) == arenaId) {
+            sender.sendMessage(McLibProvider.api.localizationController.line(LangKeys.COMMAND_JOIN_ALREADY_IN_ARENA, Placeholder.unparsed("arena", arenaId.value)))
+            return
+        }
+
         if (!arenaManager.addPlayerToArena(player, arenaId)) {
             val ctx = arenaManager.getArenaContext(arenaId)
             val key = when {

@@ -1,4 +1,4 @@
 package net.developertobi.game.api.phase
 
 @JvmInline
-value class SubPhaseId(val value: String)
+value class GameLoopPhaseId(val value: String)

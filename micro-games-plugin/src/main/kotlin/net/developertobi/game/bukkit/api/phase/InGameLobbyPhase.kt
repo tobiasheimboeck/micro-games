@@ -21,6 +21,7 @@ import org.bukkit.scheduler.BukkitTask
 class InGameLobbyPhase(
     private val plugin: Plugin,
 ) : Phase {
+
     override val id: PhaseId = PhaseId("in_game_lobby")
     override val priority: Int = 300
 

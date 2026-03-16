@@ -20,6 +20,7 @@ import org.bukkit.scheduler.BukkitTask
 class GameVotingPhase(
     private val plugin: Plugin,
 ) : Phase {
+
     override val id: PhaseId = PhaseId("game_voting")
     override val priority: Int = 200
 

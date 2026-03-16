@@ -1,6 +1,6 @@
 package net.developertobi.game.api.game
 
-import net.developertobi.game.api.phase.SubPhase
+import net.developertobi.game.api.phase.GameLoopPhase
 import net.developertobi.game.api.stats.StatDefinition
 
 /**
@@ -12,6 +12,7 @@ import net.developertobi.game.api.stats.StatDefinition
  * Each implementation must be annotated with [MicroGameProperties] and provide a parameterless constructor.
  */
 interface MicroGame {
+
     /** Called once when the game is loaded from the JAR. Keep lightweight. */
     fun onLoad() {}
 
@@ -19,10 +20,10 @@ interface MicroGame {
     fun onUnload() {}
 
     /**
-     * Sub-phases for the In-Game phase. Default: empty (arena treats as single implicit sub-phase).
-     * Games with multiple states (e.g. Spleef: build → fight) return a list of [SubPhase] implementations.
+     * Game loop for the In-Game phase. Default: empty (arena skips In-Game).
+     * Games define one (e.g. TNT Run) or multiple (e.g. Spleef: build → fight) [GameLoopPhase] implementations.
      */
-    fun createPlayingSubPhases(): List<SubPhase> = emptyList()
+    fun createGameLoop(): List<GameLoopPhase> = emptyList()
 
     /** Optional: Stats that this game tracks. Default: empty. */
     fun getStatDefinitions(): List<StatDefinition> = emptyList()

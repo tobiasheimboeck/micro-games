@@ -57,11 +57,11 @@ class BufferedStatsService(
         val definitions = getDefinitionsForGame(gameId)
         if (definitions.isEmpty()) return CompletableDeferred(emptyMap())
 
-        val result = definitions.mapNotNull { def ->
+        val result = definitions.associate { def ->
             val bufferedKey = BufferedStatKey(playerId, gameId.value, def.id)
             val value = buffer[bufferedKey] ?: def.defaultValue.toDouble()
             StatId(def.id) to toNumber(value, def.type)
-        }.toMap()
+        }
         return CompletableDeferred(result)
     }
 
@@ -84,7 +84,7 @@ class BufferedStatsService(
      * Flush buffered stats to the target service and clear the buffer.
      * Must be called from a coroutine on the database dispatcher.
      */
-    suspend fun flush(target: StatsServiceImpl) {
+    fun flush(target: StatsServiceImpl) {
         val snapshot = buffer.toMap()
         buffer.clear()
         for ((key, value) in snapshot) {

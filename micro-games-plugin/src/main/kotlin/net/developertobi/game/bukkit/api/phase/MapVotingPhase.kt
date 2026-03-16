@@ -20,6 +20,7 @@ import org.bukkit.scheduler.BukkitTask
 class MapVotingPhase(
     private val plugin: Plugin,
 ) : Phase {
+
     override val id: PhaseId = PhaseId("map_voting")
     override val priority: Int = 100
 

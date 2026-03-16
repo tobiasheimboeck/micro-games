@@ -21,6 +21,7 @@ import org.bukkit.scheduler.BukkitTask
 class EndingPhase(
     private val plugin: Plugin,
 ) : Phase {
+
     override val id: PhaseId = PhaseId("ending")
     override val priority: Int = 500
 
@@ -42,6 +43,7 @@ class EndingPhase(
             BossBarColor.RED,
             BossBarOverlay.NOTCHED_10,
         )
+
         for (player in context.players) {
             bossBar!!.addPlayer(player)
         }
@@ -60,6 +62,7 @@ class EndingPhase(
                 context.advanceToNextPhase()
                 return@Runnable
             }
+
             bossBar?.name(
                 McLibProvider.api.localizationController.line(
                     LangKeys.PHASE_ENDING,

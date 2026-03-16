@@ -12,10 +12,10 @@ Prefer **direct safe calls** over redundant `let` when only invoking a single me
 
 ```kotlin
 // Preferred
-currentSubPhase?.onStop(context)
+currentGameLoopPhase?.onStop(context)
 
 // Avoid – redundant let
-currentSubPhase?.let { sub -> sub.onStop(context) }
+currentGameLoopPhase?.let { phase -> phase.onStop(context) }
 ```
 
 Use `?.let { }` only when you need the non-null value for multiple operations or to assign to a variable.

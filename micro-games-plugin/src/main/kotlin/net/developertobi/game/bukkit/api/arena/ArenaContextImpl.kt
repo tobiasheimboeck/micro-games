@@ -3,11 +3,12 @@ package net.developertobi.game.bukkit.api.arena
 import net.developertobi.game.api.arena.ArenaContext
 import net.developertobi.game.api.arena.ArenaId
 import net.developertobi.game.api.bossbar.ArenaBossBar
+import org.bukkit.event.Listener
 import net.developertobi.game.api.bossbar.BossBarColor
 import net.developertobi.game.api.bossbar.BossBarOverlay
 import net.developertobi.game.api.game.MicroGame
 import net.developertobi.game.api.phase.Phase
-import net.developertobi.game.api.phase.SubPhase
+import net.developertobi.game.api.phase.GameLoopPhase
 import net.developertobi.game.bukkit.api.bossbar.ArenaBossBarImpl
 import net.kyori.adventure.text.Component
 import org.bukkit.entity.Player
@@ -28,7 +29,7 @@ class ArenaContextImpl(
 
     override val currentPhase: Phase? = arena.currentPhase
 
-    override val currentSubPhase: SubPhase? = arena.currentSubPhase
+    override val currentGameLoopPhase: GameLoopPhase? = arena.currentGameLoopPhase
 
     override val selectedGame: MicroGame? = arena.selectedGame
 
@@ -40,8 +41,12 @@ class ArenaContextImpl(
         arena.advanceToNextPhase()
     }
 
-    override fun advanceToNextSubPhase() {
-        arena.advanceToNextSubPhase()
+    override fun advanceToNextGameLoopPhase() {
+        arena.advanceToNextGameLoopPhase()
+    }
+
+    override fun registerListener(listener: Listener) {
+        arena.registerListener(listener)
     }
 
     override fun createBossBar(

@@ -8,6 +8,7 @@
   "microgames.command.join.full": "<red>Diese Arena ist voll.</red>",
   "microgames.command.join.ending": "<red>Diese Arena endet. Du kannst nicht beitreten.</red>",
   "microgames.command.join.failed": "<red>Konnte der Arena nicht beitreten.</red>",
+  "microgames.command.join.already_in_arena": "<red>Du bist bereits in Arena <arena>.</red>",
   "microgames.command.leave.success": "<green>Arena verlassen.</green>",
   "microgames.command.leave.not_in_arena": "<red>Du bist in keiner Arena.</red>",
   "microgames.command.list.header": "<gold>--- Arenen ---</gold>",

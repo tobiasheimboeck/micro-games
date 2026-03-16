@@ -8,7 +8,7 @@ import net.developertobi.game.api.bossbar.BossBarOverlay
 import net.developertobi.game.api.game.getProperties
 import net.developertobi.game.api.phase.Phase
 import net.developertobi.game.api.phase.PhaseId
-import net.developertobi.game.api.phase.SubPhase
+import net.developertobi.game.api.phase.GameLoopPhase
 import net.developertobi.game.api.sound.GameSound
 import net.kyori.adventure.audience.Audience
 import net.developertobi.game.bukkit.localization.LangKeys
@@ -17,6 +17,7 @@ import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import org.bukkit.entity.Player
 
 class InGamePhase : Phase {
+
     override val id: PhaseId = PhaseId("in_game")
     override val priority: Int = 400
 
@@ -52,8 +53,8 @@ class InGamePhase : Phase {
         bossBar?.removePlayer(player)
     }
 
-    fun getSubPhases(context: ArenaContext): List<SubPhase> {
+    fun getGameLoopPhases(context: ArenaContext): List<GameLoopPhase> {
         val game = context.selectedGame ?: return emptyList()
-        return game.createPlayingSubPhases().sortedBy { it.priority }
+        return game.createGameLoop().sortedBy { it.priority }
     }
 }

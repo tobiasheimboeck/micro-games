@@ -13,7 +13,7 @@ import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 
 class ArenaManagerImpl(
-    plugin: Plugin,
+    private val plugin: Plugin,
     private val phaseProvider: PhaseProvider,
     private val arenaConfig: ArenaConfig,
 ) : ArenaManager {
@@ -32,6 +32,7 @@ class ArenaManagerImpl(
         val phases = phaseProvider.createPhases(arenaId)
         val arena = ArenaImpl(
             id = arenaId,
+            plugin = plugin,
             phases = phases,
             visibilityController = visibilityController,
             maxPlayers = arenaConfig.maxPlayers,
